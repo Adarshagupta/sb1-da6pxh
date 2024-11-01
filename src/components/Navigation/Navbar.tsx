@@ -1,13 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { User, Library, PenTool, Settings2, Book } from 'lucide-react';
+import { User, Library, PenTool, Settings2, Book, Download } from 'lucide-react';
 import { auth, getUserTokens } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
 
 export const Navbar = () => {
   const { user } = useAuth();
   const [tokens, setTokens] = useState<number>(0);
   const location = useLocation();
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Check if app is already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstallable(false);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!installPrompt) return;
+
+    try {
+      await installPrompt.prompt();
+      const { outcome } = await installPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setIsInstallable(false);
+      }
+    } catch (error) {
+      console.error('Error installing PWA:', error);
+    }
+  };
 
   useEffect(() => {
     const loadTokens = async () => {
@@ -61,6 +101,16 @@ export const Navbar = () => {
                   <Icon className="w-6 h-6" />
                 </Link>
               ))}
+
+              {isInstallable && (
+                <button
+                  onClick={handleInstallClick}
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors text-indigo-600"
+                  title="Install App"
+                >
+                  <Download className="w-6 h-6" />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -81,6 +131,15 @@ export const Navbar = () => {
               <span className="text-xs mt-1">{label}</span>
             </Link>
           ))}
+          {isInstallable && (
+            <button
+              onClick={handleInstallClick}
+              className="flex flex-col items-center justify-center w-full h-full text-indigo-600"
+            >
+              <Download className="w-5 h-5" />
+              <span className="text-xs mt-1">Install</span>
+            </button>
+          )}
         </div>
       </nav>
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - BookAI</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+            background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 50%, #FCE7F3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 400px;
+        }
+        h1 {
+            color: #4F46E5;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #4B5563;
+            margin-bottom: 2rem;
+        }
+        button {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background: #4338CA;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>You're Offline</h1>
+        <p>Please check your internet connection and try again.</p>
+        <button onclick="window.location.reload()">Retry</button>
+    </div>
+</body>
+</html> 

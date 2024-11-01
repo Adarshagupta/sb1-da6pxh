@@ -13,6 +13,7 @@ import { SettingsPage } from './components/Settings/SettingsPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { StoryTools } from './components/StoryTools/StoryTools';
+import { InstallPWA } from './components/common/InstallPWA';
 
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -88,6 +89,7 @@ function App() {
                 }
               />
             </Routes>
+            <InstallPWA />
           </BrowserRouter>
         </ThemeProvider>
       </AuthProvider>

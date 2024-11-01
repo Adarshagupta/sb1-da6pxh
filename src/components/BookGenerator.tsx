@@ -17,6 +17,7 @@ interface GenerationSettings {
   length: 'short' | 'medium' | 'long';
   tone: string;
   targetAudience: string;
+  pageCount: number;
 }
 
 interface BookGeneratorProps {
@@ -64,7 +65,8 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
     style: 'descriptive',
     length: 'medium',
     tone: 'casual',
-    targetAudience: 'young-adult'
+    targetAudience: 'young-adult',
+    pageCount: 1
   });
   const abortController = useRef<AbortController | null>(null);
   const [tokens, setTokens] = useState<number>(0);
@@ -91,14 +93,31 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
     setGeneratedText('');
     abortController.current = new AbortController();
 
+    // A4 page can fit approximately 500-600 words with standard formatting
+    const WORDS_PER_PAGE = 500;
+
     const enhancedPrompt = `
       Generate a ${settings.length} story with the following specifications:
       Genre: ${settings.genre}
       Writing Style: ${settings.style}
       Tone: ${settings.tone}
       Target Audience: ${settings.targetAudience}
-      
+      Number of Pages: ${settings.pageCount}
+
+      IMPORTANT FORMATTING REQUIREMENTS:
+      1. Each page MUST contain EXACTLY ${WORDS_PER_PAGE} words
+      2. Start each page with "Page X:" (where X is the page number)
+      3. Each page must be a complete and coherent unit
+      4. Do not break sentences or paragraphs across pages
+      5. Each page should fill exactly one A4 page
+      6. Maintain consistent formatting and spacing
+      7. End each page at a natural break point
+      8. Generate exactly ${settings.pageCount} pages, each with ${WORDS_PER_PAGE} words
+
       Story Prompt: ${prompt}
+
+      Remember: Each page must be EXACTLY ${WORDS_PER_PAGE} words, no exceptions.
+      Do not move to the next page until the current page is completely filled.
     `;
 
     try {
@@ -108,7 +127,31 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
       for await (const chunk of stream) {
         if (abortController.current?.signal.aborted) break;
         fullText += chunk;
-        setGeneratedText(fullText);
+        
+        // Format the text with proper page numbers and ensure consistent length
+        const formattedText = fullText
+          .split(/Page \d+:/)
+          .filter(page => page.trim() !== '')
+          .map((page, index) => {
+            const words = page.trim().split(/\s+/);
+            
+            // Ensure each page has exactly WORDS_PER_PAGE words
+            if (words.length > WORDS_PER_PAGE) {
+              // Find the last complete sentence within the word limit
+              let cutoff = WORDS_PER_PAGE;
+              while (cutoff > 0 && !words[cutoff - 1].endsWith('.')) {
+                cutoff--;
+              }
+              return `Page ${index + 1}:\n\n${words.slice(0, cutoff).join(' ')}`;
+            } else if (words.length < WORDS_PER_PAGE) {
+              // If page is not complete, show it's still generating
+              return `Page ${index + 1}:\n\n${words.join(' ')}${words.length < WORDS_PER_PAGE ? '\n[Generating...]' : ''}`;
+            }
+            return `Page ${index + 1}:\n\n${words.join(' ')}`;
+          })
+          .join('\n\n---\n\n');
+        
+        setGeneratedText(formattedText);
       }
       
       setNotification({ type: 'success', message: 'Book generated successfully!' });
@@ -149,18 +192,50 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
   };
 
   const downloadPDF = () => {
-    const pdf = new jsPDF();
-    const splitText = pdf.splitTextToSize(generatedText, 180);
-    let yPosition = 20;
+    // A4 dimensions in points (72 points per inch)
+    // A4 is 210mm × 297mm or 8.27in × 11.69in
+    const pdf = new jsPDF({
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pageWidth = pdf.internal.pageSize.width;
+    const pageHeight = pdf.internal.pageSize.height;
+    const margin = 20; // 20mm margins
+    const usableWidth = pageWidth - (2 * margin);
+    const usableHeight = pageHeight - (2 * margin);
     
-    pdf.setFontSize(12);
-    splitText.forEach((text: string) => {
-      if (yPosition > 280) {
+    // Split the text into pages
+    const pages = generatedText.split(/Page \d+:/).filter(page => page.trim());
+    
+    pages.forEach((pageContent, pageIndex) => {
+      if (pageIndex > 0) {
         pdf.addPage();
-        yPosition = 20;
       }
-      pdf.text(text, 15, yPosition);
-      yPosition += 7;
+      
+      // Set font and size
+      pdf.setFont('helvetica');
+      pdf.setFontSize(11); // Standard font size for documents
+      
+      // Add page number at the top
+      const pageNumber = `Page ${pageIndex + 1}`;
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(pageNumber, margin, margin);
+      pdf.setFont('helvetica', 'normal');
+      
+      // Split and format the content
+      const content = pageContent.trim();
+      const splitText = pdf.splitTextToSize(content, usableWidth);
+      
+      let yPosition = margin + 10;
+      splitText.forEach((line: string) => {
+        if (yPosition > pageHeight - margin) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        pdf.text(line, margin, yPosition);
+        yPosition += 6; // Line height in mm
+      });
     });
     
     pdf.save('generated-book.pdf');
@@ -294,6 +369,24 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
                       ))}
                     </select>
                   </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Number of Pages</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="1"
+                        max="50"
+                        value={settings.pageCount}
+                        onChange={(e) => setSettings({ 
+                          ...settings, 
+                          pageCount: Math.max(1, Math.min(50, parseInt(e.target.value) || 1))
+                        })}
+                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                      />
+                      <span className="text-sm text-gray-500">page{settings.pageCount > 1 ? 's' : ''}</span>
+                    </div>
+                    <p className="text-xs text-gray-500">Each page is approximately 500 words</p>
+                  </div>
                 </div>
               </div>
             )}
@@ -355,8 +448,32 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
               {/* Generated Content */}
               {generatedText && (
                 <div className="mt-6 md:mt-8">
-                  <div className="bg-white rounded-xl p-4 md:p-8 prose prose-sm md:prose max-w-none border border-gray-100 shadow-sm">
-                    <ReactMarkdown>{generatedText}</ReactMarkdown>
+                  <div className="bg-white rounded-xl p-4 md:p-8 shadow-sm">
+                    <div className="max-w-[210mm] mx-auto"> {/* A4 width */}
+                      <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none">
+                        {/* A4 page simulation */}
+                        <div className="bg-white shadow-lg p-[20mm] min-h-[297mm] w-[210mm] mx-auto">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => (
+                                <p className="mb-4 text-gray-800 leading-relaxed">{children}</p>
+                              ),
+                              h1: ({ children }) => (
+                                <h1 className="text-2xl font-bold mb-6 text-gray-900">{children}</h1>
+                              ),
+                              h2: ({ children }) => (
+                                <h2 className="text-xl font-semibold mb-4 text-gray-900">{children}</h2>
+                              ),
+                              hr: () => (
+                                <hr className="my-8 border-t-2 border-gray-100" />
+                              ),
+                            }}
+                          >
+                            {generatedText}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

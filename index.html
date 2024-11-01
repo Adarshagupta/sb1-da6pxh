@@ -42,8 +42,6 @@
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#4F46E5" />
     <link rel="shortcut icon" href="/favicon.png" />
 
-    <meta name="google-site-verification" content="BR_9JAf8lN8Sv0QVG7AAn1Rhu097krlgboMBA-k-Ydk" />
-
     <!-- Preconnect to important domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -56,8 +54,8 @@
         "name": "BookAI",
         "description": "AI-powered book creation platform",
         "url": "https://bookai.app",
-        "applicationCategory": "Writing Software",
-        "operatingSystem": "Web Browser",
+        "applicationCategory": "WritingSoftware",
+        "operatingSystem": "WebBrowser",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -66,7 +64,24 @@
         "creator": {
           "@type": "Organization",
           "name": "BookAI",
-          "logo": "/logo.png"
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://bookai.app/logo.png",
+            "width": "512",
+            "height": "512"
+          }
+        },
+        "potentialAction": {
+          "@type": "CreateAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookai.app/generator",
+            "description": "Create a new book"
+          },
+          "result": {
+            "@type": "CreativeWork",
+            "name": "Generated Book"
+          }
         }
       }
     </script>

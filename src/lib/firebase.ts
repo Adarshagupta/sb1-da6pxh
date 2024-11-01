@@ -20,10 +20,19 @@ const DEFAULT_TOKENS = 50000;
 export const signInWithGoogle = async () => {
   try {
     const provider = new GoogleAuthProvider();
+    
+    // Force account selection even if user is already signed in
+    provider.setCustomParameters({
+      prompt: 'select_account',
+      access_type: 'offline',
+      login_hint: '' // Clear any previous login hints
+    });
+
+    // Use signInWithPopup with the configured provider
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Check if this is a new user by trying to get their document
+    // Check if this is a new user
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     
     if (!userDoc.exists()) {
