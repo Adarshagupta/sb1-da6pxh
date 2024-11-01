@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { LogOut, User, BookOpen, Library } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { User, BookOpen, Library, PenTool, Settings2 } from 'lucide-react';
 import { auth, getUserTokens } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 
 export const Navbar = () => {
   const { user } = useAuth();
   const [tokens, setTokens] = useState<number>(0);
+  const location = useLocation();
 
   useEffect(() => {
     const loadTokens = async () => {
@@ -36,28 +37,44 @@ export const Navbar = () => {
             </div>
 
             <Link 
+              to="/" 
+              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
+                location.pathname === '/' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
+              }`}
+              title="Generate Book"
+            >
+              <PenTool className="w-6 h-6" />
+            </Link>
+
+            <Link 
               to="/library" 
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
+                location.pathname === '/library' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
+              }`}
               title="Library"
             >
-              <Library className="w-6 h-6 text-gray-600" />
+              <Library className="w-6 h-6" />
             </Link>
 
             <Link 
               to="/profile" 
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
+                location.pathname === '/profile' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
+              }`}
               title="Profile"
             >
-              <User className="w-6 h-6 text-gray-600" />
+              <User className="w-6 h-6" />
             </Link>
 
-            <button
-              onClick={() => auth.signOut()}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              title="Sign Out"
+            <Link 
+              to="/settings" 
+              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
+                location.pathname === '/settings' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
+              }`}
+              title="Settings"
             >
-              <LogOut className="w-6 h-6 text-gray-600" />
-            </button>
+              <Settings2 className="w-6 h-6" />
+            </Link>
           </div>
         </div>
       </div>

@@ -9,6 +9,8 @@ import { auth } from './lib/firebase';
 import { Loader } from './components/ui/Loader';
 import { AuthProvider } from './context/AuthContext';
 import { LibraryPage } from './components/Library/LibraryPage';
+import { SettingsPage } from './components/Settings/SettingsPage';
+import { ThemeProvider } from './context/ThemeContext';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const [user, loading] = useAuthState(auth);
@@ -36,35 +38,45 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/auth" element={<AuthForm />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <BookGenerator />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/library"
-            element={
-              <PrivateRoute>
-                <LibraryPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <ProfilePage />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <ThemeProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<AuthForm />} />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <BookGenerator />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/library"
+              element={
+                <PrivateRoute>
+                  <LibraryPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <PrivateRoute>
+                  <SettingsPage />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
