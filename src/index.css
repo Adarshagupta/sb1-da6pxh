@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+/* Token Display Styles */
+.token-display {
+  background: linear-gradient(to right, #F5D14B, #F7E27B);
+  border: 1px solid #E5C23D;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  color: #8B6F2C;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.token-display:hover {
+  background: linear-gradient(to right, #F7E27B, #F5D14B);
+  transition: background 0.3s ease;
+}
