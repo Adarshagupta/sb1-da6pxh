@@ -15,6 +15,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { StoryTools } from './components/StoryTools/StoryTools';
 import { InstallPWA } from './components/common/InstallPWA';
 import { requestNotificationPermission, scheduleBookReminders } from './utils/notifications';
+import { NotificationPrompt } from './components/common/NotificationPrompt';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const [user, loading] = useAuthState(auth);
@@ -40,33 +41,19 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
+  const [user] = useAuthState(auth);
+
   useEffect(() => {
-    const askNotificationPermission = async () => {
-      try {
-        // Show a custom notification prompt first
-        const shouldAsk = window.confirm(
-          'Would you like to receive notifications for new book reminders and updates?'
-        );
-
-        if (shouldAsk) {
-          const permissionGranted = await requestNotificationPermission();
-          if (permissionGranted) {
-            scheduleBookReminders();
-            // Show success message
-            alert('Notifications enabled successfully! You will receive reminders twice a day.');
-          }
+    // Show notification prompt when user logs in
+    if (user && Notification.permission === 'default') {
+      // Directly request notification permission
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          scheduleBookReminders();
         }
-      } catch (error) {
-        console.error('Error requesting notification permission:', error);
-      }
-    };
-
-    // Check if notifications are already granted
-    if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-      // Wait a few seconds before showing the prompt
-      setTimeout(askNotificationPermission, 3000);
+      });
     }
-  }, []);
+  }, [user]);
 
   return (
     <HelmetProvider>
@@ -117,6 +104,7 @@ function App() {
               />
             </Routes>
             <InstallPWA />
+            <NotificationPrompt />
           </BrowserRouter>
         </ThemeProvider>
       </AuthProvider>
