@@ -74,10 +74,10 @@ export const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-2 md:p-6 pb-20 md:pb-6">
+    <div className="min-h-screen bg-white md:bg-gradient-to-br md:from-indigo-50 md:via-purple-50 md:to-pink-50 p-2 md:p-6">
       <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
         {/* Profile Header */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-4 md:p-8 border border-white/20">
+        <div className="bg-white md:bg-white/80 md:backdrop-blur-sm rounded-2xl md:shadow-xl p-4 md:p-8 md:border md:border-white/20">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="p-3 md:p-4 bg-indigo-100 rounded-full">
@@ -127,7 +127,7 @@ export const ProfilePage = () => {
         </div>
 
         {/* Token Packages */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-4 md:p-8 border border-white/20">
+        <div className="bg-white md:bg-white/80 md:backdrop-blur-sm rounded-2xl md:shadow-xl p-4 md:p-8 md:border md:border-white/20">
           <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">Purchase Tokens</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {tokenPackages.map((pkg, index) => (

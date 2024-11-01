@@ -286,10 +286,10 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
         ogType="website"
         imageAlt="AI Book Generator Interface"
       />
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-2 md:p-6 pb-20">
-        <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
+      <div className="min-h-screen bg-white md:bg-gradient-to-br md:from-indigo-50 md:via-purple-50 md:to-pink-50 p-2 md:p-6">
+        <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
           {/* Main Content Card */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-4 md:p-8 border border-white/20">
+          <div className="bg-white md:bg-white/80 md:backdrop-blur-sm rounded-2xl md:shadow-xl p-4 md:p-8 md:border md:border-white/20">
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
               <div className="flex items-center gap-3">
