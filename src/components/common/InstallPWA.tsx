@@ -48,7 +48,7 @@ export const InstallPWA = () => {
       <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-4 max-w-sm mx-auto md:mx-0">
         <div className="flex items-start justify-between mb-2">
           <div className="flex items-center gap-2">
-            <img src="/AppImages/logo.png" alt="BookAI Logo" className="w-8 h-8" />
+            <img src="/logo.png" alt="BookAI Logo" className="w-8 h-8" />
             <h3 className="font-semibold text-gray-800">Install BookAI</h3>
           </div>
           <button 

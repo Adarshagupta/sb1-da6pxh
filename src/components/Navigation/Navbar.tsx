@@ -76,7 +76,7 @@ export const Navbar = () => {
             <div className="flex items-center">
               <Link to="/" className="flex items-center">
                 <img 
-                  src="/AppImages/logo.png" 
+                  src="/logo.png" 
                   alt="BookAI Logo" 
                   className="h-12 w-auto"
                 />
@@ -148,7 +148,7 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-16 px-4">
           <Link to="/" className="flex items-center">
             <img 
-              src="/AppImages/logo.png" 
+              src="/logo.png" 
               alt="BookAI Logo" 
               className="h-8 w-auto"
             />

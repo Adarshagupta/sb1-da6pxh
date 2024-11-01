@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['/AppImages/**/*'],
+      includeAssets: ['logo.png'],
       manifest: {
         id: 'com.bookai.app',
         name: 'BookAI - Create Books with Artificial Intelligence',
@@ -22,28 +22,16 @@ export default defineConfig({
         orientation: 'any',
         icons: [
           {
-            src: '/AppImages/android/android-launchericon-512-512.png',
+            src: '/logo.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any'
+            purpose: 'any maskable'
           },
           {
-            src: '/AppImages/android/android-launchericon-192-192.png',
+            src: '/logo.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any'
-          },
-          {
-            src: '/AppImages/android/android-launchericon-512-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
-          },
-          {
-            src: '/AppImages/android/android-launchericon-192-192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'maskable'
           }
         ]
       },
