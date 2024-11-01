@@ -7,11 +7,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      strategies: 'injectManifest',
-      srcDir: 'src',
-      filename: 'sw.ts',
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
+      includeAssets: ['/AppImages/**/*'],
       manifest: {
+        id: 'com.bookai.app',
         name: 'BookAI - Create Books with Artificial Intelligence',
         short_name: 'BookAI',
         description: 'AI-powered book creation platform',
@@ -20,28 +19,60 @@ export default defineConfig({
         display: 'standalone',
         scope: '/',
         start_url: '/',
-        orientation: 'portrait',
+        orientation: 'any',
         icons: [
           {
-            src: '/android-chrome-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any maskable'
-          },
-          {
-            src: '/android-chrome-512x512.png',
+            src: '/AppImages/android/android-launchericon-512-512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: '/AppImages/android/android-launchericon-192-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: '/AppImages/android/android-launchericon-512-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          },
+          {
+            src: '/AppImages/android/android-launchericon-192-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'google-fonts-stylesheets'
+            }
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-webfonts',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+              }
+            }
           }
         ]
       },
       devOptions: {
         enabled: true,
         type: 'module'
-      },
-      injectManifest: {
-        rollupFormat: 'iife'
       }
     })
   ],
