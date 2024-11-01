@@ -14,6 +14,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { StoryTools } from './components/StoryTools/StoryTools';
 
+
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const [user, loading] = useAuthState(auth);
 
@@ -53,6 +54,7 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              
               <Route
                 path="/library"
                 element={
@@ -90,7 +92,10 @@ function App() {
         </ThemeProvider>
       </AuthProvider>
     </HelmetProvider>
+    
   );
+
+
 }
 
 export default App;

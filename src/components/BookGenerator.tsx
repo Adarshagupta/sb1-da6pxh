@@ -233,6 +233,7 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
                 <span>Settings</span>
               </button>
             </div>
+            
 
             {/* Settings Panel */}
             {showSettings && (
