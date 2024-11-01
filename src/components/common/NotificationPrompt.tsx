@@ -5,6 +5,18 @@ import { requestNotificationPermission, scheduleBookReminders } from '../../util
 export const NotificationPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false);
 
+  const sendWelcomeNotification = () => {
+    new Notification('Welcome to BookAI! 🎉', {
+      body: "Thank you for enabling notifications. We'll keep you updated about your book generation progress.",
+      icon: '/logo.png',
+      badge: '/logo.png',
+      tag: 'welcome',
+      data: {
+        url: window.location.origin
+      }
+    });
+  };
+
   useEffect(() => {
     // Show prompt immediately if notifications are not granted or denied
     if (Notification.permission === 'default') {
@@ -13,6 +25,7 @@ export const NotificationPrompt = () => {
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
           scheduleBookReminders();
+          sendWelcomeNotification();
           setShowPrompt(false);
         }
       });
@@ -24,6 +37,7 @@ export const NotificationPrompt = () => {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
       scheduleBookReminders();
+      sendWelcomeNotification();
       setShowPrompt(false);
     } else {
       alert('Please enable notifications in your browser settings to receive updates.');
