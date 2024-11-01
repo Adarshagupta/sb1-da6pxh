@@ -21,28 +21,59 @@ async function generateFavicons() {
     { size: 180, name: 'apple-touch-icon.png' },
     { size: 192, name: 'android-chrome-192x192.png' },
     { size: 512, name: 'android-chrome-512x512.png' },
+    { size: 192, name: 'maskable-192x192.png', maskable: true },
+    { size: 512, name: 'maskable-512x512.png', maskable: true },
+    { size: 96, name: 'shortcut-96x96.png' },
     { size: 32, name: 'favicon.png' }
   ];
 
   try {
-    // Download the logo
     console.log('Downloading logo...');
     const imageBuffer = await downloadImage('https://raw.githubusercontent.com/adarshagupta/trybookai/main/logo.png');
     
-    // Create public directory if it doesn't exist
     const publicDir = path.join(process.cwd(), 'public');
     await fs.mkdir(publicDir, { recursive: true });
 
-    // Generate different sizes
     console.log('Generating favicons...');
-    for (const { size, name } of sizes) {
-      await sharp(imageBuffer)
-        .resize(size, size)
-        .toFile(path.join(publicDir, name));
+    for (const { size, name, maskable } of sizes) {
+      if (maskable) {
+        // Add padding for maskable icons (safe area)
+        const padding = Math.floor(size * 0.1);
+        await sharp(imageBuffer)
+          .resize(size - (padding * 2), size - (padding * 2))
+          .extend({
+            top: padding,
+            bottom: padding,
+            left: padding,
+            right: padding,
+            background: { r: 79, g: 70, b: 229, alpha: 1 } // Indigo-600
+          })
+          .toFile(path.join(publicDir, name));
+      } else {
+        await sharp(imageBuffer)
+          .resize(size, size)
+          .toFile(path.join(publicDir, name));
+      }
       console.log(`Generated ${name}`);
     }
 
-    // Create og-image
+    // Generate screenshots
+    console.log('Generating screenshots...');
+    await sharp(imageBuffer)
+      .resize(1280, 720, {
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, alpha: 1 }
+      })
+      .toFile(path.join(publicDir, 'screenshot-wide.jpg'));
+
+    await sharp(imageBuffer)
+      .resize(640, 1136, {
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, alpha: 1 }
+      })
+      .toFile(path.join(publicDir, 'screenshot-narrow.jpg'));
+
+    // Generate og-image
     console.log('Generating og-image...');
     await sharp(imageBuffer)
       .resize(1200, 630, {
@@ -51,9 +82,9 @@ async function generateFavicons() {
       })
       .toFile(path.join(publicDir, 'og-image.jpg'));
     
-    console.log('All favicons generated successfully!');
+    console.log('All assets generated successfully!');
   } catch (error) {
-    console.error('Error generating favicons:', error);
+    console.error('Error generating assets:', error);
   }
 }
 

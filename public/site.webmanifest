@@ -1,50 +1,190 @@
 {
+  "id": "com.bookai.app",
   "name": "BookAI - Create Books with Artificial Intelligence",
   "short_name": "BookAI",
   "description": "AI-powered book creation platform",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay"],
   "background_color": "#ffffff",
   "theme_color": "#4F46E5",
+  "orientation": "any",
+  "launch_handler": {
+    "client_mode": ["focus-existing", "auto"]
+  },
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/android-chrome-512x512.png",
+      "src": "/AppImages/android/android-launchericon-512-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/favicon-32x32.png",
+      "src": "/AppImages/android/android-launchericon-192-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/AppImages/ios/16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/20.png",
+      "sizes": "20x20",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/29.png",
+      "sizes": "29x29",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/32.png",
       "sizes": "32x32",
       "type": "image/png"
     },
     {
-      "src": "/favicon-16x16.png",
-      "sizes": "16x16",
+      "src": "/AppImages/ios/40.png",
+      "sizes": "40x40",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/50.png",
+      "sizes": "50x50",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/57.png",
+      "sizes": "57x57",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/58.png",
+      "sizes": "58x58",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/60.png",
+      "sizes": "60x60",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/76.png",
+      "sizes": "76x76",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/80.png",
+      "sizes": "80x80",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/87.png",
+      "sizes": "87x87",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/100.png",
+      "sizes": "100x100",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/114.png",
+      "sizes": "114x114",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/120.png",
+      "sizes": "120x120",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/167.png",
+      "sizes": "167x167",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/AppImages/ios/1024.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ],
   "screenshots": [
     {
-      "src": "/screenshot1.jpg",
+      "src": "/AppImages/screenshots/mobile.jpg",
+      "sizes": "640x1136",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "BookAI Mobile Dashboard"
+    },
+    {
+      "src": "/AppImages/screenshots/desktop.jpg",
       "sizes": "1280x720",
       "type": "image/jpeg",
-      "platform": "wide",
-      "label": "BookAI Dashboard"
+      "form_factor": "wide",
+      "label": "BookAI Desktop Dashboard"
     }
   ],
-  "categories": ["productivity", "writing", "books"],
   "shortcuts": [
     {
       "name": "Create New Book",
       "url": "/generator",
-      "description": "Start creating a new book"
+      "description": "Start creating a new book",
+      "icons": [
+        {
+          "src": "/AppImages/ios/96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 } 
