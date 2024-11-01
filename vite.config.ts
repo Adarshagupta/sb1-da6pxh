@@ -7,8 +7,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
+      registerType: 'prompt',
       manifest: {
         name: 'BookAI - Create Books with Artificial Intelligence',
         short_name: 'BookAI',
@@ -32,40 +34,14 @@ export default defineConfig({
             type: 'image/png',
             purpose: 'any maskable'
           }
-        ],
-        screenshots: [
-          {
-            src: '/screenshot1.jpg',
-            sizes: '1280x720',
-            type: 'image/jpeg',
-            platform: 'wide',
-            label: 'BookAI Dashboard'
-          }
         ]
       },
-      workbox: {
-        cleanupOutdatedCaches: true,
-        sourcemap: true,
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com/,
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'google-fonts-cache'
-            }
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-webfonts',
-              expiration: {
-                maxEntries: 30,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              }
-            }
-          }
-        ]
+      devOptions: {
+        enabled: true,
+        type: 'module'
+      },
+      injectManifest: {
+        rollupFormat: 'iife'
       }
     })
   ],

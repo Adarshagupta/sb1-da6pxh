@@ -71,7 +71,7 @@ export const Navbar = () => {
     <>
       {/* Desktop Navigation */}
       <nav className="bg-white shadow-md hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/" className="flex items-center">
@@ -162,7 +162,6 @@ export const Navbar = () => {
 
       {/* Add padding to main content for mobile */}
       <div className="md:hidden h-16"></div>
-      <div className="md:hidden h-16 mb-16"></div>
     </>
   );
 };

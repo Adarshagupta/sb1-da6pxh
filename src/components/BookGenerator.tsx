@@ -286,7 +286,7 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
         ogType="website"
         imageAlt="AI Book Generator Interface"
       />
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 md:p-6 pt-20 md:pt-6">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-2 md:p-6 pt-20 md:pt-6">
         <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
           {/* Main Content Card */}
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-4 md:p-8 border border-white/20">
