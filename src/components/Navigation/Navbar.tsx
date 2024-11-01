@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { User, BookOpen, Library, PenTool, Settings2 } from 'lucide-react';
+import { User, BookOpen, Library, PenTool, Settings2, Book } from 'lucide-react';
 import { auth, getUserTokens } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 
@@ -74,6 +74,16 @@ export const Navbar = () => {
               title="Settings"
             >
               <Settings2 className="w-6 h-6" />
+            </Link>
+
+            <Link 
+              to="/tools" 
+              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
+                location.pathname === '/tools' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
+              }`}
+              title="Story Tools"
+            >
+              <Book className="w-6 h-6" />
             </Link>
           </div>
         </div>

@@ -12,6 +12,7 @@ import { LibraryPage } from './components/Library/LibraryPage';
 import { SettingsPage } from './components/Settings/SettingsPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { HelmetProvider } from 'react-helmet-async';
+import { StoryTools } from './components/StoryTools/StoryTools';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const [user, loading] = useAuthState(auth);
@@ -73,6 +74,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <SettingsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/tools"
+                element={
+                  <PrivateRoute>
+                    <StoryTools />
                   </PrivateRoute>
                 }
               />
