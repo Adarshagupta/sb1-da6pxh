@@ -297,7 +297,7 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
                   <BookOpen className="w-6 h-6 md:w-8 md:h-8 text-indigo-600" />
                 </div>
                 <div>
-                  <h1 className="text-xl md:text-2xl font-bold text-gray-800">Create Professional Books with AI</h1>
+                  <h1 className="text-xl md:text-2xl font-bold text-gray-800">Create Professional Books</h1>
                   <h2 className="text-xs md:text-sm text-gray-600">Generate unique stories instantly</h2>
                 </div>
               </div>
