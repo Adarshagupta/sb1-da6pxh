@@ -10,20 +10,22 @@ interface SEOProps {
   author?: string;
   language?: string;
   imageAlt?: string;
+  h1?: string;
 }
 
-const DEFAULT_KEYWORDS = 'AI book writing, book generator, story creation, artificial intelligence writing, automated book creation, creative writing tool, novel generator, story generator, writing assistant, AI storytelling';
+const DEFAULT_KEYWORDS = 'AI book writing, book generator, story creation, artificial intelligence writing, automated book creation, creative writing tool, novel generator, story generator, writing assistant, AI storytelling, BookAI';
 
 export const SEO = ({
   title = 'BookAI - Create Books with Artificial Intelligence',
-  description = 'Transform your ideas into captivating books with BookAI. Our AI-powered platform helps you generate, edit, and publish professional books in minutes. Start creating your next bestseller today!',
-  canonicalUrl = 'https://bookai.app',
-  ogImage = '/og-image.jpg',
+  description = 'Create professional books instantly with AI. Generate, edit, and publish books in minutes. Transform your ideas into captivating stories with BookAI.',
+  canonicalUrl = 'https://app.trybookai.com',
+  ogImage = '/AppImages/og-image.jpg',
   ogType = 'website',
   keywords = DEFAULT_KEYWORDS,
   author = 'BookAI',
   language = 'en',
-  imageAlt = 'BookAI - AI Book Generation Platform'
+  imageAlt = 'BookAI - AI Book Generation Platform',
+  h1 = 'Create Professional Books with AI'
 }: SEOProps) => {
   const defaultTitle = 'BookAI - Create Books with Artificial Intelligence';
   const fullTitle = title === defaultTitle ? title : `${title} | BookAI`;
@@ -67,6 +69,7 @@ export const SEO = ({
           "@context": "https://schema.org",
           "@type": "WebApplication",
           "name": "BookAI",
+          "headline": h1,
           "description": description,
           "url": canonicalUrl,
           "applicationCategory": "Writing Software",
@@ -78,7 +81,19 @@ export const SEO = ({
           },
           "creator": {
             "@type": "Organization",
-            "name": "BookAI"
+            "name": "BookAI",
+            "logo": {
+              "@type": "ImageObject",
+              "url": `${canonicalUrl}/AppImages/logo.png`,
+              "width": "512",
+              "height": "512"
+            }
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": `${canonicalUrl}${ogImage}`,
+            "width": "1200",
+            "height": "630"
           }
         })}
       </script>
