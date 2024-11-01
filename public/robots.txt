@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://bookai.app/sitemap.xml
+
+# Disallow sensitive routes
+Disallow: /auth
+Disallow: /api/
+Disallow: /admin/ 

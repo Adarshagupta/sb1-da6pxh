@@ -11,6 +11,7 @@ import { AuthProvider } from './context/AuthContext';
 import { LibraryPage } from './components/Library/LibraryPage';
 import { SettingsPage } from './components/Settings/SettingsPage';
 import { ThemeProvider } from './context/ThemeContext';
+import { HelmetProvider } from 'react-helmet-async';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const [user, loading] = useAuthState(auth);
@@ -37,47 +38,49 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/auth" element={<AuthForm />} />
-            <Route
-              path="/"
-              element={
-                <PrivateRoute>
-                  <BookGenerator />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/library"
-              element={
-                <PrivateRoute>
-                  <LibraryPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <PrivateRoute>
-                  <ProfilePage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <PrivateRoute>
-                  <SettingsPage />
-                </PrivateRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/auth" element={<AuthForm />} />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <BookGenerator />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/library"
+                element={
+                  <PrivateRoute>
+                    <LibraryPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <ProfilePage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <PrivateRoute>
+                    <SettingsPage />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
 

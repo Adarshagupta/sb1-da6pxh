@@ -4,6 +4,7 @@ import { updateProfile, updateEmail, updatePassword, EmailAuthProvider, reauthen
 import { Notification } from '../ui/Notification';
 import { Loader } from '../ui/Loader';
 import { Mail, Lock, User, Shield } from 'lucide-react';
+import { SEO } from '../common/SEO';
 
 export function ProfileSettings() {
   const [loading, setLoading] = useState(false);
@@ -82,107 +83,114 @@ export function ProfileSettings() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <User className="w-5 h-5 text-indigo-600" />
-          Profile Information
-        </h3>
-        <form onSubmit={handleUpdateProfile} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Display Name</label>
-            <input
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 disabled:opacity-50"
-          >
-            {loading ? <Loader size="small" /> : 'Update Profile'}
-          </button>
-        </form>
-      </div>
+    <>
+      <SEO 
+        title="Profile Settings | BookAI"
+        description="Manage your BookAI profile settings. Customize your book generation preferences and account details."
+        ogType="profile"
+      />
+      <div className="space-y-6">
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <User className="w-5 h-5 text-indigo-600" />
+            Profile Information
+          </h3>
+          <form onSubmit={handleUpdateProfile} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Display Name</label>
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 disabled:opacity-50"
+            >
+              {loading ? <Loader size="small" /> : 'Update Profile'}
+            </button>
+          </form>
+        </div>
 
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <Mail className="w-5 h-5 text-indigo-600" />
-          Email Settings
-        </h3>
-        <form onSubmit={handleUpdateEmail} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <input
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 disabled:opacity-50"
-          >
-            {loading ? <Loader size="small" /> : 'Update Email'}
-          </button>
-        </form>
-      </div>
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Mail className="w-5 h-5 text-indigo-600" />
+            Email Settings
+          </h3>
+          <form onSubmit={handleUpdateEmail} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 disabled:opacity-50"
+            >
+              {loading ? <Loader size="small" /> : 'Update Email'}
+            </button>
+          </form>
+        </div>
 
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <Shield className="w-5 h-5 text-indigo-600" />
-          Security Settings
-        </h3>
-        <form onSubmit={handleUpdatePassword} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <input
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 disabled:opacity-50"
-          >
-            {loading ? <Loader size="small" /> : 'Update Password'}
-          </button>
-        </form>
-      </div>
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Shield className="w-5 h-5 text-indigo-600" />
+            Security Settings
+          </h3>
+          <form onSubmit={handleUpdatePassword} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 disabled:opacity-50"
+            >
+              {loading ? <Loader size="small" /> : 'Update Password'}
+            </button>
+          </form>
+        </div>
 
-      {notification && (
-        <Notification
-          type={notification.type}
-          message={notification.message}
-          onClose={() => setNotification(null)}
-        />
-      )}
-    </div>
+        {notification && (
+          <Notification
+            type={notification.type}
+            message={notification.message}
+            onClose={() => setNotification(null)}
+          />
+        )}
+      </div>
+    </>
   );
 }
