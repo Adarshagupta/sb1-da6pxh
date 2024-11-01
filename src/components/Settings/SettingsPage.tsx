@@ -135,60 +135,59 @@ export const SettingsPage = () => {
     <>
       <SEO 
         title="Account Settings | BookAI"
-        description="Manage your BookAI account settings. Customize your writing preferences, API configurations, notification settings, and more for an optimal book creation experience."
-        keywords="account settings, user preferences, AI configuration, writing settings, profile management"
+        description="Manage your BookAI account settings. Customize your writing preferences, API configurations, notification settings, and more."
         ogType="website"
         imageAlt="BookAI Settings Dashboard"
       />
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 md:p-6 pt-20 md:pt-6">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-4 md:p-8 border border-white/20">
             {/* Header */}
-            <div className="flex items-center gap-4 mb-8">
-              <div className="p-3 bg-indigo-100 rounded-xl">
-                <Settings2 className="w-8 h-8 text-indigo-600" />
+            <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+              <div className="p-2 md:p-3 bg-indigo-100 rounded-xl">
+                <Settings2 className="w-6 h-6 md:w-8 md:h-8 text-indigo-600" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Settings</h1>
-                <p className="text-sm text-gray-600">Customize your experience</p>
+                <h1 className="text-xl md:text-2xl font-bold text-gray-800">Settings</h1>
+                <p className="text-xs md:text-sm text-gray-600">Customize your experience</p>
               </div>
             </div>
 
             {/* Settings Sections */}
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8">
               {/* Appearance */}
-              <section className="space-y-4">
-                <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <Sun className="w-5 h-5" />
+              <section className="space-y-3 md:space-y-4">
+                <h2 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <Sun className="w-4 h-4 md:w-5 md:h-5" />
                   Appearance
                 </h2>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                   {['light', 'dark', 'system'].map((theme) => (
                     <button
                       key={theme}
                       onClick={() => setSettings({ ...settings, theme: theme as 'light' | 'dark' | 'system' })}
-                      className={`p-4 rounded-lg border ${
+                      className={`p-3 md:p-4 rounded-lg border transition-colors ${
                         settings.theme === theme
                           ? 'border-indigo-500 bg-indigo-50'
                           : 'border-gray-200 hover:border-indigo-200'
                       }`}
                     >
-                      <div className="font-medium text-gray-800 capitalize">{theme}</div>
+                      <div className="font-medium text-sm md:text-base text-gray-800 capitalize">{theme}</div>
                     </button>
                   ))}
                 </div>
               </section>
 
               {/* Notifications */}
-              <section className="space-y-4">
-                <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <Bell className="w-5 h-5" />
+              <section className="space-y-3 md:space-y-4">
+                <h2 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <Bell className="w-4 h-4 md:w-5 md:h-5" />
                   Notifications
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   {Object.entries(settings.emailNotifications).map(([key, value]) => (
                     <div key={key} className="flex items-center justify-between">
-                      <label className="text-gray-700 capitalize">
+                      <label className="text-sm md:text-base text-gray-700 capitalize">
                         {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
                       </label>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -206,7 +205,7 @@ export const SettingsPage = () => {
                           }
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        <div className="w-10 md:w-11 h-5 md:h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 md:after:h-5 after:w-4 md:after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                       </label>
                     </div>
                   ))}
@@ -214,15 +213,15 @@ export const SettingsPage = () => {
               </section>
 
               {/* Language */}
-              <section className="space-y-4">
-                <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <Globe className="w-5 h-5" />
+              <section className="space-y-3 md:space-y-4">
+                <h2 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <Globe className="w-4 h-4 md:w-5 md:h-5" />
                   Language
                 </h2>
                 <select
                   value={settings.language}
                   onChange={(e) => setSettings({ ...settings, language: e.target.value })}
-                  className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full max-w-xs px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm md:text-base"
                 >
                   <option value="en">English</option>
                   <option value="es">Español</option>
@@ -231,14 +230,14 @@ export const SettingsPage = () => {
                 </select>
               </section>
 
-              {/* Add this section before the Account section */}
-              <section className="space-y-4">
-                <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <Settings2 className="w-5 h-5" />
+              {/* API Configuration */}
+              <section className="space-y-3 md:space-y-4">
+                <h2 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <Settings2 className="w-4 h-4 md:w-5 md:h-5" />
                   API Configuration
                 </h2>
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm md:text-base font-medium text-gray-700">
                     Together AI API Key
                   </label>
                   <div className="space-y-2">
@@ -246,10 +245,10 @@ export const SettingsPage = () => {
                       type="password"
                       value={settings.togetherApiKey || ''}
                       onChange={(e) => setSettings({ ...settings, togetherApiKey: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm md:text-base"
                       placeholder="Enter your Together AI API key (optional)"
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs md:text-sm text-gray-500">
                       Leave empty to use the default API key. Get your own API key from{' '}
                       <a 
                         href="https://www.together.ai/api" 
@@ -264,15 +263,15 @@ export const SettingsPage = () => {
                 </div>
               </section>
 
-              {/* Add this section before the save button */}
-              <section className="space-y-4 pt-6 border-t">
-                <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <LogOut className="w-5 h-5" />
+              {/* Account Section */}
+              <section className="space-y-3 md:space-y-4 pt-4 md:pt-6 border-t">
+                <h2 className="text-base md:text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <LogOut className="w-4 h-4 md:w-5 md:h-5" />
                   Account
                 </h2>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors text-sm md:text-base"
                 >
                   <LogOut className="w-4 h-4" />
                   Sign Out
@@ -280,11 +279,11 @@ export const SettingsPage = () => {
               </section>
 
               {/* Save Button */}
-              <div className="pt-6 border-t mt-8">
+              <div className="pt-4 md:pt-6 border-t">
                 <button
                   onClick={handleSaveSettings}
                   disabled={isSaving}
-                  className="flex items-center justify-center gap-2 w-full md:w-auto px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                  className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 text-sm md:text-base"
                 >
                   <Save className="w-4 h-4" />
                   {isSaving ? 'Saving...' : 'Save Settings'}

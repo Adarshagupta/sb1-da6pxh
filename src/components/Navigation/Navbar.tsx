@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { User, BookOpen, Library, PenTool, Settings2, Book } from 'lucide-react';
+import { User, Library, PenTool, Settings2, Book } from 'lucide-react';
 import { auth, getUserTokens } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 
@@ -19,75 +19,91 @@ export const Navbar = () => {
     loadTokens();
   }, [user]);
 
-  return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800">
-              <BookOpen className="w-6 h-6" />
-              <span className="font-bold text-xl">AI Book Generator</span>
-            </Link>
-          </div>
+  const navigationItems = [
+    { path: '/', icon: PenTool, label: 'Create' },
+    { path: '/library', icon: Library, label: 'Library' },
+    { path: '/tools', icon: Book, label: 'Tools' },
+    { path: '/profile', icon: User, label: 'Profile' },
+    { path: '/settings', icon: Settings2, label: 'Settings' },
+  ];
 
-          <div className="flex items-center gap-4">
-            <div className="token-display flex items-center gap-1.5">
-              <span>{tokens.toLocaleString()}</span>
-              <span className="text-sm opacity-75">tokens</span>
+  return (
+    <>
+      {/* Desktop Navigation */}
+      <nav className="bg-white shadow-md hidden md:block">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center">
+                <img 
+                  src="/logo.png" 
+                  alt="BookAI Logo" 
+                  className="h-12 w-auto"
+                />
+              </Link>
             </div>
 
-            <Link 
-              to="/" 
-              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
-                location.pathname === '/' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
-              }`}
-              title="Generate Book"
-            >
-              <PenTool className="w-6 h-6" />
-            </Link>
+            <div className="flex items-center gap-4">
+              <div className="token-display flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full text-sm">
+                <span className="font-medium">{tokens.toLocaleString()}</span>
+                <span className="text-xs text-gray-500">tokens</span>
+              </div>
 
-            <Link 
-              to="/library" 
-              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
-                location.pathname === '/library' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
-              }`}
-              title="Library"
-            >
-              <Library className="w-6 h-6" />
-            </Link>
+              {navigationItems.map(({ path, icon: Icon, label }) => (
+                <Link 
+                  key={path}
+                  to={path} 
+                  className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
+                    location.pathname === path ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
+                  }`}
+                  title={label}
+                >
+                  <Icon className="w-6 h-6" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </nav>
 
-            <Link 
-              to="/profile" 
-              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
-                location.pathname === '/profile' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+        <div className="flex justify-around items-center h-16">
+          {navigationItems.map(({ path, icon: Icon, label }) => (
+            <Link
+              key={path}
+              to={path}
+              className={`flex flex-col items-center justify-center w-full h-full ${
+                location.pathname === path ? 'text-indigo-600' : 'text-gray-600'
               }`}
-              title="Profile"
             >
-              <User className="w-6 h-6" />
+              <Icon className="w-5 h-5" />
+              <span className="text-xs mt-1">{label}</span>
             </Link>
+          ))}
+        </div>
+      </nav>
 
-            <Link 
-              to="/settings" 
-              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
-                location.pathname === '/settings' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
-              }`}
-              title="Settings"
-            >
-              <Settings2 className="w-6 h-6" />
-            </Link>
-
-            <Link 
-              to="/tools" 
-              className={`p-2 rounded-full hover:bg-gray-100 transition-colors ${
-                location.pathname === '/tools' ? 'bg-gray-100 text-indigo-600' : 'text-gray-600'
-              }`}
-              title="Story Tools"
-            >
-              <Book className="w-6 h-6" />
-            </Link>
+      {/* Mobile Top Bar */}
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+        <div className="flex justify-between items-center h-16 px-4">
+          <Link to="/" className="flex items-center">
+            <img 
+              src="/logo.png" 
+              alt="BookAI Logo" 
+              className="h-8 w-auto"
+            />
+          </Link>
+          <div className="token-display flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full text-xs">
+            <span className="font-medium">{tokens.toLocaleString()}</span>
+            <span className="text-gray-500">tokens</span>
           </div>
         </div>
       </div>
-    </nav>
+
+      {/* Add padding to main content for mobile */}
+      <div className="md:hidden h-16"></div>
+      <div className="md:hidden h-16 mb-16"></div>
+    </>
   );
 };

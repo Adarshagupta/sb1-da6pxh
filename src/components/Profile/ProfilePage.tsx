@@ -1,7 +1,7 @@
 import React from 'react';
 import { User, Coins, BookOpen, Clock, Settings2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { db, updateUserTokens } from '../../lib/firebase';
+import { db, getUserTokens, updateUserTokens } from '../../lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 
@@ -74,23 +74,23 @@ export const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 md:p-6 pt-20 md:pt-6">
+      <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
         {/* Profile Header */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
-          <div className="flex items-center justify-between">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-4 md:p-8 border border-white/20">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="p-4 bg-indigo-100 rounded-full">
-                <User className="w-8 h-8 text-indigo-600" />
+              <div className="p-3 md:p-4 bg-indigo-100 rounded-full">
+                <User className="w-6 h-6 md:w-8 md:h-8 text-indigo-600" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Profile</h1>
-                <p className="text-gray-600">{user?.email}</p>
+                <h1 className="text-xl md:text-2xl font-bold text-gray-800">Profile</h1>
+                <p className="text-sm md:text-base text-gray-600">{user?.email}</p>
               </div>
             </div>
             <Link
               to="/settings"
-              className="flex items-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-gray-700 transition-colors"
+              className="flex items-center justify-center md:justify-start gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-gray-700 transition-colors"
             >
               <Settings2 className="w-5 h-5" />
               <span>Settings</span>
@@ -98,29 +98,28 @@ export const ProfilePage = () => {
           </div>
         </div>
 
-
         {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <StatCard
-            icon={<BookOpen className="w-6 h-6" />}
+            icon={<BookOpen className="w-5 h-5 md:w-6 md:h-6" />}
             title="Total Books"
             value={stats.totalBooks.toString()}
             color="indigo"
           />
           <StatCard
-            icon={<Clock className="w-6 h-6" />}
+            icon={<Clock className="w-5 h-5 md:w-6 md:h-6" />}
             title="Total Words"
             value={stats.totalWords.toLocaleString()}
             color="purple"
           />
           <StatCard
-            icon={<BookOpen className="w-6 h-6" />}
+            icon={<BookOpen className="w-5 h-5 md:w-6 md:h-6" />}
             title="Favorite Genre"
             value={stats.favoriteGenre || 'N/A'}
             color="pink"
           />
           <StatCard
-            icon={<Clock className="w-6 h-6" />}
+            icon={<Clock className="w-5 h-5 md:w-6 md:h-6" />}
             title="Last Generated"
             value={stats.lastGenerated?.toLocaleDateString() || 'Never'}
             color="amber"
@@ -128,13 +127,13 @@ export const ProfilePage = () => {
         </div>
 
         {/* Token Packages */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Purchase Tokens</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-4 md:p-8 border border-white/20">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">Purchase Tokens</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {tokenPackages.map((pkg, index) => (
               <div
                 key={index}
-                className={`relative rounded-xl p-6 ${
+                className={`relative rounded-xl p-4 md:p-6 ${
                   pkg.popular
                     ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white'
                     : 'bg-white border border-gray-200'
@@ -148,16 +147,16 @@ export const ProfilePage = () => {
                   </div>
                 )}
                 <div className="text-center">
-                  <Coins className={`w-12 h-12 mx-auto mb-4 ${pkg.popular ? 'text-white' : 'text-indigo-600'}`} />
-                  <h3 className={`text-2xl font-bold mb-2 ${pkg.popular ? 'text-white' : 'text-gray-800'}`}>
+                  <Coins className={`w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 ${pkg.popular ? 'text-white' : 'text-indigo-600'}`} />
+                  <h3 className={`text-lg md:text-2xl font-bold mb-2 ${pkg.popular ? 'text-white' : 'text-gray-800'}`}>
                     {pkg.tokens.toLocaleString()} Tokens
                   </h3>
-                  <p className={`text-3xl font-bold mb-4 ${pkg.popular ? 'text-white' : 'text-gray-800'}`}>
+                  <p className={`text-2xl md:text-3xl font-bold mb-3 md:mb-4 ${pkg.popular ? 'text-white' : 'text-gray-800'}`}>
                     ${pkg.price}
                   </p>
                   <button
                     onClick={() => handlePurchase(pkg)}
-                    className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
+                    className={`w-full py-2 px-4 rounded-lg font-medium transition-colors text-sm md:text-base ${
                       pkg.popular
                         ? 'bg-white text-indigo-600 hover:bg-gray-100'
                         : 'bg-indigo-600 text-white hover:bg-indigo-700'
@@ -191,12 +190,12 @@ const StatCard: React.FC<StatCardProps> = ({ icon, title, value, color }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-      <div className="flex items-center gap-4">
-        <div className={`p-3 rounded-lg ${colors[color]}`}>{icon}</div>
+    <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-100">
+      <div className="flex items-center gap-3 md:gap-4">
+        <div className={`p-2 md:p-3 rounded-lg ${colors[color]}`}>{icon}</div>
         <div>
-          <p className="text-sm text-gray-500">{title}</p>
-          <p className="text-xl font-bold text-gray-800">{value}</p>
+          <p className="text-xs md:text-sm text-gray-500">{title}</p>
+          <p className="text-lg md:text-xl font-bold text-gray-800">{value}</p>
         </div>
       </div>
     </div>

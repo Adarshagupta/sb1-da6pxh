@@ -211,36 +211,35 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
         ogType="website"
         imageAlt="AI Book Generator Interface"
       />
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 md:p-6 pt-20 md:pt-6">
+        <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
           {/* Main Content Card */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-4 md:p-8 border border-white/20">
             {/* Header Section */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-indigo-100 rounded-xl">
-                  <BookOpen className="w-8 h-8 text-indigo-600" />
+                <div className="p-2 md:p-3 bg-indigo-100 rounded-xl">
+                  <BookOpen className="w-6 h-6 md:w-8 md:h-8 text-indigo-600" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-800">AI Book Generator</h1>
-                  <p className="text-sm text-gray-600">Create unique stories with AI</p>
+                  <h1 className="text-xl md:text-2xl font-bold text-gray-800">AI Book Generator</h1>
+                  <p className="text-xs md:text-sm text-gray-600">Create unique stories with AI</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowSettings(!showSettings)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-700 transition-colors duration-200"
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-700 transition-colors duration-200 text-sm md:text-base"
               >
-                <Settings2 className="w-5 h-5" />
+                <Settings2 className="w-4 h-4 md:w-5 md:h-5" />
                 <span>Settings</span>
               </button>
             </div>
-            
 
             {/* Settings Panel */}
             {showSettings && (
-              <div className="mb-8 p-6 bg-white rounded-xl border border-gray-100 shadow-sm space-y-4">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Story Settings</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="mb-6 md:mb-8 p-4 md:p-6 bg-white rounded-xl border border-gray-100 shadow-sm space-y-4">
+                <h2 className="text-base md:text-lg font-semibold text-gray-800 mb-4">Story Settings</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">Genre</label>
                     <select
@@ -300,7 +299,7 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
             )}
 
             {/* Prompt Input */}
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
                   Describe your book idea
@@ -308,17 +307,17 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-32 resize-none"
+                  className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-24 md:h-32 resize-none text-sm md:text-base"
                   placeholder="Enter a detailed description of the book you want to generate..."
                 />
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-4">
                 <button
                   onClick={handleGenerate}
                   disabled={isGenerating || !prompt}
-                  className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+                  className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2.5 md:py-3 px-4 md:px-6 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg text-sm md:text-base"
                 >
                   {isGenerating ? (
                     <>
@@ -327,7 +326,7 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
                     </>
                   ) : (
                     <>
-                      <Wand2 className="w-5 h-5" />
+                      <Wand2 className="w-4 h-4 md:w-5 md:h-5" />
                       <span>Generate Book</span>
                     </>
                   )}
@@ -337,16 +336,16 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
                   <>
                     <button
                       onClick={saveToLibrary}
-                      className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white py-2.5 md:py-3 px-4 md:px-6 rounded-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-200 shadow-md hover:shadow-lg text-sm md:text-base"
                     >
-                      <Save className="w-5 h-5" />
+                      <Save className="w-4 h-4 md:w-5 md:h-5" />
                       <span>Save</span>
                     </button>
                     <button
                       onClick={downloadPDF}
-                      className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2.5 md:py-3 px-4 md:px-6 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg text-sm md:text-base"
                     >
-                      <Download className="w-5 h-5" />
+                      <Download className="w-4 h-4 md:w-5 md:h-5" />
                       <span>Download</span>
                     </button>
                   </>
@@ -355,8 +354,8 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
 
               {/* Generated Content */}
               {generatedText && (
-                <div className="mt-8">
-                  <div className="bg-white rounded-xl p-8 prose max-w-none border border-gray-100 shadow-sm">
+                <div className="mt-6 md:mt-8">
+                  <div className="bg-white rounded-xl p-4 md:p-8 prose prose-sm md:prose max-w-none border border-gray-100 shadow-sm">
                     <ReactMarkdown>{generatedText}</ReactMarkdown>
                   </div>
                 </div>
