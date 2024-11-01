@@ -1,0 +1,8 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.trybookai.app.twa",
+      "sha256_cert_fingerprints": ["39:2D:5F:20:CE:CB:63:57:E0:5B:F6:E6:DC:F4:A6:74:8A:4D:A4:3C:38:1C:73:DC:FC:4B:31:85:79:57:38:5F"]
+    }
+  }]
