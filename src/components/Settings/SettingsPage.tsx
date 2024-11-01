@@ -8,10 +8,16 @@ import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { SEO } from '../common/SEO';
 import { auth } from '../../lib/firebase';
+import { requestNotificationPermission, scheduleBookReminders } from '../../utils/notifications';
+import { Switch } from '../ui/Switch';
 
 interface UserSettings {
   theme: 'light' | 'dark' | 'system';
-  notifications: boolean;
+  notifications: {
+    enabled: boolean;
+    morningReminder: boolean;
+    afternoonReminder: boolean;
+  };
   language: string;
   emailNotifications: {
     bookGenerated: boolean;
@@ -23,7 +29,11 @@ interface UserSettings {
 
 const defaultSettings: UserSettings = {
   theme: 'system',
-  notifications: true,
+  notifications: {
+    enabled: true,
+    morningReminder: true,
+    afternoonReminder: true,
+  },
   language: 'en',
   emailNotifications: {
     bookGenerated: true,
@@ -123,6 +133,28 @@ export const SettingsPage = () => {
     }
   };
 
+  const handleNotificationChange = async (setting: string, value: boolean) => {
+    if (value && setting === 'enabled') {
+      const permissionGranted = await requestNotificationPermission();
+      if (!permissionGranted) {
+        setNotification({
+          type: 'error',
+          message: 'Please enable notifications in your browser settings'
+        });
+        return;
+      }
+      scheduleBookReminders();
+    }
+
+    setSettings(prev => ({
+      ...prev,
+      notifications: {
+        ...prev.notifications,
+        [setting]: value
+      }
+    }));
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -184,31 +216,38 @@ export const SettingsPage = () => {
                   <Bell className="w-4 h-4 md:w-5 md:h-5" />
                   Notifications
                 </h2>
-                <div className="space-y-3 md:space-y-4">
-                  {Object.entries(settings.emailNotifications).map(([key, value]) => (
-                    <div key={key} className="flex items-center justify-between">
-                      <label className="text-sm md:text-base text-gray-700 capitalize">
-                        {key.replace(/([A-Z])/g, ' $1').toLowerCase()}
-                      </label>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={value}
-                          onChange={(e) =>
-                            setSettings({
-                              ...settings,
-                              emailNotifications: {
-                                ...settings.emailNotifications,
-                                [key]: e.target.checked
-                              }
-                            })
-                          }
-                          className="sr-only peer"
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm md:text-base text-gray-700">
+                      Enable Notifications
+                    </label>
+                    <Switch
+                      checked={settings.notifications.enabled}
+                      onChange={(value) => handleNotificationChange('enabled', value)}
+                    />
+                  </div>
+                  {settings.notifications.enabled && (
+                    <>
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm md:text-base text-gray-700">
+                          Morning Reminder (10 AM)
+                        </label>
+                        <Switch
+                          checked={settings.notifications.morningReminder}
+                          onChange={(value) => handleNotificationChange('morningReminder', value)}
                         />
-                        <div className="w-10 md:w-11 h-5 md:h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 md:after:h-5 after:w-4 md:after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                      </label>
-                    </div>
-                  ))}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm md:text-base text-gray-700">
+                          Afternoon Reminder (4 PM)
+                        </label>
+                        <Switch
+                          checked={settings.notifications.afternoonReminder}
+                          onChange={(value) => handleNotificationChange('afternoonReminder', value)}
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
               </section>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthForm } from './components/AuthForm';
 import { BookGenerator } from './components/BookGenerator';
@@ -14,7 +14,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { StoryTools } from './components/StoryTools/StoryTools';
 import { InstallPWA } from './components/common/InstallPWA';
-
+import { requestNotificationPermission, scheduleBookReminders } from './utils/notifications';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const [user, loading] = useAuthState(auth);
@@ -40,6 +40,34 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
+  useEffect(() => {
+    const askNotificationPermission = async () => {
+      try {
+        // Show a custom notification prompt first
+        const shouldAsk = window.confirm(
+          'Would you like to receive notifications for new book reminders and updates?'
+        );
+
+        if (shouldAsk) {
+          const permissionGranted = await requestNotificationPermission();
+          if (permissionGranted) {
+            scheduleBookReminders();
+            // Show success message
+            alert('Notifications enabled successfully! You will receive reminders twice a day.');
+          }
+        }
+      } catch (error) {
+        console.error('Error requesting notification permission:', error);
+      }
+    };
+
+    // Check if notifications are already granted
+    if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+      // Wait a few seconds before showing the prompt
+      setTimeout(askNotificationPermission, 3000);
+    }
+  }, []);
+
   return (
     <HelmetProvider>
       <AuthProvider>
@@ -55,7 +83,6 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              
               <Route
                 path="/library"
                 element={
@@ -94,10 +121,7 @@ function App() {
         </ThemeProvider>
       </AuthProvider>
     </HelmetProvider>
-    
   );
-
-
 }
 
 export default App;
