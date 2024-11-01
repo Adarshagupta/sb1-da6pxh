@@ -19,6 +19,7 @@ export const streamBookGeneration = async function*(prompt: string) {
     })
   });
 
+  
   const reader = response.body?.getReader();
   if (!reader) throw new Error('No reader available');
 
