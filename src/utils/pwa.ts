@@ -5,25 +5,22 @@ export function registerPWA() {
         const registration = await navigator.serviceWorker.register('/sw.js', {
           scope: '/'
         });
-        console.log('ServiceWorker registration successful');
+        console.log('ServiceWorker registration successful:', registration);
 
-        // Handle updates
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // New content is available, show update prompt
-                if (confirm('New version available! Would you like to update?')) {
-                  window.location.reload();
-                }
-              }
-            });
-          }
+        // Add debug logging for PWA events
+        window.addEventListener('beforeinstallprompt', (e) => {
+          console.log('beforeinstallprompt event fired');
         });
+
+        window.addEventListener('appinstalled', (e) => {
+          console.log('PWA was installed');
+        });
+
       } catch (error) {
         console.error('ServiceWorker registration failed:', error);
       }
     });
+  } else {
+    console.log('Service workers are not supported');
   }
 } 

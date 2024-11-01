@@ -6,47 +6,72 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+declare global {
+  interface WindowEventMap {
+    beforeinstallprompt: BeforeInstallPromptEvent;
+  }
+}
+
 export const InstallPWA = () => {
-  const [supportsPWA, setSupportsPWA] = useState(false);
-  const [promptEvent, setPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(true);
 
   useEffect(() => {
-    const handler = (e: Event) => {
+    const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault();
-      setSupportsPWA(true);
-      setPromptEvent(e as BeforeInstallPromptEvent);
+      // Stash the event so it can be triggered later
+      setDeferredPrompt(e);
+      console.log('PWA install prompt ready');
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
+    // Check if app is already installed
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
+    if (isInstalled) {
+      setShowPrompt(false);
+    }
 
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
   }, []);
 
   const handleInstallClick = async () => {
-    if (!promptEvent) return;
+    if (!deferredPrompt) {
+      console.log('No install prompt available');
+      return;
+    }
 
     try {
-      await promptEvent.prompt();
-      const { outcome } = await promptEvent.userChoice;
-      if (outcome === 'accepted') {
+      // Show the install prompt
+      await deferredPrompt.prompt();
+      // Wait for the user to respond to the prompt
+      const choiceResult = await deferredPrompt.userChoice;
+      
+      if (choiceResult.outcome === 'accepted') {
         console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
       }
-    } catch (error) {
-      console.error('Error installing PWA:', error);
-    } finally {
+      
+      // Clear the saved prompt since it can't be used again
+      setDeferredPrompt(null);
       setShowPrompt(false);
+    } catch (err) {
+      console.error('Error installing PWA:', err);
     }
   };
 
-  if (!supportsPWA || !showPrompt) return null;
+  if (!deferredPrompt || !showPrompt) return null;
 
   return (
     <div className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 z-50">
       <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-4 max-w-sm mx-auto md:mx-0">
         <div className="flex items-start justify-between mb-2">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="BookAI Logo" className="w-8 h-8" />
+            <img src="/AppImages/logo.png" alt="BookAI Logo" className="w-8 h-8" />
             <h3 className="font-semibold text-gray-800">Install BookAI</h3>
           </div>
           <button 
