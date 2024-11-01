@@ -11,7 +11,7 @@ import {
 import { BookOpen } from 'lucide-react';
 import { Notification } from './ui/Notification';
 import { Loader } from './ui/Loader';
-import { initializeNewUser } from '../lib/firebase';
+import { initializeNewUser, signInWithGoogle } from '../lib/firebase';
 
 export function AuthForm() {
   const navigate = useNavigate();
@@ -58,23 +58,17 @@ export function AuthForm() {
   };
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      if (!result.user.emailVerified) {
-        setNotification({
-          type: 'error',
-          message: 'Please verify your email before signing in.'
-        });
-        await auth.signOut();
-        return;
-      }
+      await signInWithGoogle();
       navigate('/');
     } catch (err) {
       setNotification({
         type: 'error',
         message: err instanceof Error ? err.message : 'Failed to sign in with Google'
       });
+    } finally {
+      setLoading(false);
     }
   };
 

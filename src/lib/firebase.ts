@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { getFirestore, doc, setDoc, updateDoc, getDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -15,17 +15,60 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-interface UserData {
-  email: string;
-  tokens: number;
-  // ... other existing fields
-}
+const DEFAULT_TOKENS = 50000;
+
+export const signInWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    // Check if this is a new user by trying to get their document
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    
+    if (!userDoc.exists()) {
+      // Initialize new user data with tokens
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        tokens: DEFAULT_TOKENS,
+        createdAt: new Date().toISOString(),
+        settings: {
+          theme: 'system',
+          notifications: true,
+          language: 'en',
+          emailNotifications: {
+            bookGenerated: true,
+            tokensPurchased: true,
+            weeklyNewsletter: false,
+          }
+        }
+      });
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Error signing in with Google:', error);
+    throw error;
+  }
+};
 
 export const initializeNewUser = async (uid: string, email: string) => {
-  const userData: UserData = {
+  const userData = {
     email,
-    tokens: 50000,
-    // ... other existing fields
+    tokens: DEFAULT_TOKENS,
+    createdAt: new Date().toISOString(),
+    settings: {
+      theme: 'system',
+      notifications: true,
+      language: 'en',
+      emailNotifications: {
+        bookGenerated: true,
+        tokensPurchased: true,
+        weeklyNewsletter: false,
+      }
+    }
   };
   
   await setDoc(doc(db, 'users', uid), userData);
