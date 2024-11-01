@@ -14,7 +14,7 @@ const generateSitemap = async (hostname: string) => {
   const stream = new SitemapStream({ hostname });
 
   // Return a promise that resolves with your XML string
-  return streamToPromise(Readable.from(links).pipe(stream)).then((data) =>
+  return streamToPromise(Readable.from(links).pipe(stream)).then((data: Buffer) =>
     data.toString()
   );
 };
