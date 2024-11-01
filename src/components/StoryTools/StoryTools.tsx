@@ -109,8 +109,11 @@ export const StoryTools = () => {
   return (
     <>
       <SEO 
-        title="Story Structure Tools | BookAI"
-        description="Create compelling stories with our suite of writing tools. Plot outlines, character profiles, world-building, and more."
+        title="Story Writing Tools | BookAI"
+        description="Professional story development tools for writers. Create character profiles, plot outlines, world-building elements, and organize your chapters with our comprehensive toolkit."
+        keywords="story planning tools, character creator, plot generator, world building, chapter organizer, writing software, story structure"
+        ogType="website"
+        imageAlt="Story Writing Tools Dashboard"
       />
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
         <div className="max-w-6xl mx-auto">

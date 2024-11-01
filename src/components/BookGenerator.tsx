@@ -205,10 +205,11 @@ export const BookGenerator: React.FC<BookGeneratorProps> = ({ /* ... */ }) => {
   return (
     <>
       <SEO 
-        title="Create AI-Generated Books | BookAI"
-        description="Create professional books instantly with AI. Our advanced book generator helps you write, format, and export books in minutes. Start creating for free!"
+        title="Create AI Books | BookAI"
+        description="Generate professional books instantly with our AI-powered book creator. Choose your genre, style, and let AI craft your story. Create unlimited books with advanced AI technology."
+        keywords="AI book creator, story generator, automated writing, book writing software, AI writer, creative writing tool, novel generator"
         ogType="website"
-        keywords="AI book generator, book writing tool, automated book creation, AI writer, free book generator"
+        imageAlt="AI Book Generator Interface"
       />
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
         <div className="max-w-4xl mx-auto space-y-6">

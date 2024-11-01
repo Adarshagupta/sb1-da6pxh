@@ -134,9 +134,11 @@ export const SettingsPage = () => {
   return (
     <>
       <SEO 
-        title="Settings | BookAI"
-        description="Configure your BookAI experience. Customize AI settings, export preferences, and more."
+        title="Account Settings | BookAI"
+        description="Manage your BookAI account settings. Customize your writing preferences, API configurations, notification settings, and more for an optimal book creation experience."
+        keywords="account settings, user preferences, AI configuration, writing settings, profile management"
         ogType="website"
+        imageAlt="BookAI Settings Dashboard"
       />
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
         <div className="max-w-4xl mx-auto">
