@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Settings2, Save, Bell, Moon, Sun, Globe, LogOut } from 'lucide-react';
+import { Settings2, Save, Bell, Moon, Sun, Globe, LogOut, AlertTriangle, Loader } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { Notification } from '../ui/Notification';
 import { useTheme } from '../../context/ThemeContext';
@@ -10,6 +10,8 @@ import { SEO } from '../common/SEO';
 import { auth } from '../../lib/firebase';
 import { requestNotificationPermission, scheduleBookReminders } from '../../utils/notifications';
 import { Switch } from '../ui/Switch';
+import { DeleteAccountModal } from './DeleteAccountModal';
+import { deleteUser } from 'firebase/auth';
 
 interface UserSettings {
   theme: 'light' | 'dark' | 'system';
@@ -51,6 +53,7 @@ export const SettingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { theme: currentTheme, setTheme } = useTheme();
   const navigate = useNavigate();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     if (currentTheme) {
@@ -153,6 +156,28 @@ export const SettingsPage = () => {
         [setting]: value
       }
     }));
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!auth.currentUser) return;
+
+    try {
+      // Delete user data from Firestore
+      const userDoc = doc(db, 'users', auth.currentUser.uid);
+      await deleteDoc(userDoc);
+
+      // Delete user authentication
+      await deleteUser(auth.currentUser);
+
+      // Redirect to auth page
+      navigate('/auth');
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      setNotification({
+        type: 'error',
+        message: 'Failed to delete account. Please try again.'
+      });
+    }
   };
 
   if (isLoading) {
@@ -328,6 +353,33 @@ export const SettingsPage = () => {
                   {isSaving ? 'Saving...' : 'Save Settings'}
                 </button>
               </div>
+
+              {/* Danger Zone */}
+              <section className="space-y-3 md:space-y-4 pt-4 md:pt-6 border-t">
+                <h2 className="text-base md:text-lg font-semibold text-red-600 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
+                  Danger Zone
+                </h2>
+                <div className="p-4 bg-red-50 rounded-lg border border-red-100">
+                  <h3 className="text-base font-medium text-red-800 mb-2">Delete Account</h3>
+                  <p className="text-sm text-red-600 mb-4">
+                    Once you delete your account, there is no going back. Please be certain.
+                  </p>
+                  <button
+                    onClick={() => setShowDeleteModal(true)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </section>
+
+              {/* Delete Account Modal */}
+              <DeleteAccountModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={handleDeleteAccount}
+              />
             </div>
           </div>
         </div>
