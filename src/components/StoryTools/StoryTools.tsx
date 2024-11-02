@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Book, Users, Globe, Layout, FileText } from 'lucide-react';
+import { Book, Users, Globe, Layout, FileText, Plus, Trash2 } from 'lucide-react';
 import { SEO } from '../common/SEO';
 
 interface StoryElement {
@@ -110,41 +110,42 @@ export const StoryTools = () => {
     <>
       <SEO 
         title="Story Writing Tools | BookAI"
-        description="Professional story development tools for writers. Create character profiles, plot outlines, world-building elements, and organize your chapters with our comprehensive toolkit."
-        keywords="story planning tools, character creator, plot generator, world building, chapter organizer, writing software, story structure"
+        description="Professional story development tools for writers. Create character profiles, plot outlines, world-building elements, and organize your chapters."
+        keywords="story planning tools, character creator, plot generator, world building, chapter organizer"
         ogType="website"
-        imageAlt="Story Writing Tools Dashboard"
       />
       <div className="min-h-screen bg-white md:bg-gradient-to-br md:from-indigo-50 md:via-purple-50 md:to-pink-50 p-2 md:p-6">
         <div className="max-w-6xl mx-auto">
           <div className="bg-white md:bg-white/80 md:backdrop-blur-sm rounded-2xl md:shadow-xl p-4 md:p-8 md:border md:border-white/20">
             {/* Header */}
-            <div className="flex items-center gap-4 mb-6 md:mb-8">
+            <div className="flex items-center gap-3 mb-6">
               <div className="p-2 md:p-3 bg-indigo-100 rounded-xl">
                 <Book className="w-6 h-6 md:w-8 md:h-8 text-indigo-600" />
               </div>
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-gray-800">Story Structure Tools</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-gray-800">Story Tools</h1>
                 <p className="text-xs md:text-sm text-gray-600">Build your story elements</p>
               </div>
             </div>
 
-            {/* Navigation Tabs - Scrollable on mobile */}
-            <div className="overflow-x-auto -mx-4 px-4 md:overflow-visible md:px-0 mb-6 md:mb-8">
+            {/* Navigation Tabs - Horizontal scrollable on mobile */}
+            <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 mb-6">
               <div className="flex space-x-2 md:space-x-4 border-b min-w-max md:min-w-0">
                 {[
-                  { id: 'plot', label: 'Plot Outline', icon: FileText },
+                  { id: 'plot', label: 'Plot', icon: FileText },
                   { id: 'characters', label: 'Characters', icon: Users },
-                  { id: 'world', label: 'World Building', icon: Globe },
+                  { id: 'world', label: 'World', icon: Globe },
                   { id: 'chapters', label: 'Chapters', icon: Layout }
                 ].map(({ id, label, icon: Icon }) => (
                   <button
                     key={id}
                     onClick={() => setActiveTab(id as any)}
-                    className={`flex items-center gap-1 md:gap-2 px-3 py-2 md:px-4 whitespace-nowrap text-sm md:text-base
-                      ${activeTab === id ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-600'}`}
+                    className={`flex items-center gap-1.5 px-3 py-2.5 text-sm md:text-base whitespace-nowrap transition-colors
+                      ${activeTab === id 
+                        ? 'border-b-2 border-indigo-600 text-indigo-600' 
+                        : 'text-gray-600 hover:text-gray-800'}`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-4 h-4 md:w-5 md:h-5" />
                     <span>{label}</span>
                   </button>
                 ))}
@@ -152,114 +153,117 @@ export const StoryTools = () => {
             </div>
 
             {/* Content Area */}
-            <div className="space-y-4 md:space-y-6">
-              {/* Plot Outline */}
+            <div className="space-y-4">
+              {/* Add Button - Fixed at bottom on mobile */}
+              <div className="fixed bottom-20 right-4 md:static md:mb-4 z-10">
+                <button
+                  onClick={() => {
+                    switch (activeTab) {
+                      case 'plot': addPlotPoint(); break;
+                      case 'characters': addCharacter(); break;
+                      case 'world': addWorldElement(); break;
+                      case 'chapters': addChapter(); break;
+                    }
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-full md:rounded-lg hover:bg-indigo-700 transition-colors shadow-lg md:shadow-none"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span className="hidden md:inline">Add {activeTab.slice(0, -1)}</span>
+                </button>
+              </div>
+
+              {/* Plot Points */}
               {activeTab === 'plot' && (
-                <div className="space-y-4">
-                  <button
-                    onClick={addPlotPoint}
-                    className="w-full md:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  >
-                    Add Plot Point
-                  </button>
-                  <div className="space-y-4">
-                    {plotPoints.map((point, index) => (
-                      <div key={point.id} className="p-4 bg-white rounded-lg border">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-sm md:text-base">Plot Point {index + 1}</span>
-                        </div>
-                        <textarea
-                          value={point.content}
-                          onChange={(e) => {
-                            const newPoints = [...plotPoints];
-                            newPoints[index].content = e.target.value;
-                            setPlotPoints(newPoints);
-                          }}
-                          className="w-full p-2 border rounded-lg text-sm md:text-base"
-                          rows={3}
-                          placeholder="Describe the plot point..."
-                        />
+                <div className="grid gap-4">
+                  {plotPoints.map((point, index) => (
+                    <div key={point.id} className="bg-white rounded-lg border p-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">Point {index + 1}</span>
+                        <button
+                          onClick={() => setPlotPoints(points => points.filter(p => p.id !== point.id))}
+                          className="text-gray-400 hover:text-red-500"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
-                    ))}
-                  </div>
+                      <textarea
+                        value={point.content}
+                        onChange={(e) => {
+                          const newPoints = [...plotPoints];
+                          newPoints[index].content = e.target.value;
+                          setPlotPoints(newPoints);
+                        }}
+                        className="w-full p-2 border rounded-lg text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        rows={3}
+                        placeholder="Describe what happens in this plot point..."
+                      />
+                    </div>
+                  ))}
                 </div>
               )}
 
-              {/* Character Profiles */}
+              {/* Characters */}
               {activeTab === 'characters' && (
-                <div className="space-y-4">
-                  <button
-                    onClick={addCharacter}
-                    className="w-full md:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  >
-                    Add Character
-                  </button>
-                  <div className="space-y-4">
-                    {characters.map((character, index) => (
-                      <div key={character.id} className="p-4 bg-white rounded-lg border">
-                        <h3 className="font-medium mb-4 text-sm md:text-base">Character {index + 1}</h3>
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input
-                              type="text"
-                              value={character.name}
-                              onChange={(e) => {
-                                const newCharacters = [...characters];
-                                newCharacters[index].name = e.target.value;
-                                setCharacters(newCharacters);
-                              }}
-                              className="w-full p-2 border rounded-lg text-sm md:text-base"
-                              placeholder="Character Name"
-                            />
-                            <input
-                              type="text"
-                              value={character.role}
-                              onChange={(e) => {
-                                const newCharacters = [...characters];
-                                newCharacters[index].role = e.target.value;
-                                setCharacters(newCharacters);
-                              }}
-                              className="w-full p-2 border rounded-lg text-sm md:text-base"
-                              placeholder="Role in Story"
-                            />
-                          </div>
-                          <textarea
-                            value={character.description}
-                            onChange={(e) => {
-                              const newCharacters = [...characters];
-                              newCharacters[index].description = e.target.value;
-                              setCharacters(newCharacters);
-                            }}
-                            className="w-full p-2 border rounded-lg text-sm md:text-base"
-                            rows={3}
-                            placeholder="Physical Description"
-                          />
-                          <textarea
-                            value={character.motivation}
-                            onChange={(e) => {
-                              const newCharacters = [...characters];
-                              newCharacters[index].motivation = e.target.value;
-                              setCharacters(newCharacters);
-                            }}
-                            className="w-full p-2 border rounded-lg text-sm md:text-base"
-                            rows={3}
-                            placeholder="Motivation"
-                          />
-                          <textarea
-                            value={character.background}
-                            onChange={(e) => {
-                              const newCharacters = [...characters];
-                              newCharacters[index].background = e.target.value;
-                              setCharacters(newCharacters);
-                            }}
-                            className="w-full p-2 border rounded-lg text-sm md:text-base"
-                            rows={3}
-                            placeholder="Background"
-                          />
-                        </div>
+                <div className="grid gap-4">
+                  {characters.map((character, index) => (
+                    <div key={character.id} className="bg-white rounded-lg border p-4 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">Character {index + 1}</span>
+                        <button
+                          onClick={() => setCharacters(chars => chars.filter(c => c.id !== character.id))}
+                          className="text-gray-400 hover:text-red-500"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
-                    ))}
-                  </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input
+                          type="text"
+                          value={character.name}
+                          onChange={(e) => {
+                            const newCharacters = [...characters];
+                            newCharacters[index].name = e.target.value;
+                            setCharacters(newCharacters);
+                          }}
+                          className="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                          placeholder="Character Name"
+                        />
+                        <input
+                          type="text"
+                          value={character.role}
+                          onChange={(e) => {
+                            const newCharacters = [...characters];
+                            newCharacters[index].role = e.target.value;
+                            setCharacters(newCharacters);
+                          }}
+                          className="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                          placeholder="Role in Story"
+                        />
+                      </div>
+                      <textarea
+                        value={character.description}
+                        onChange={(e) => {
+                          const newCharacters = [...characters];
+                          newCharacters[index].description = e.target.value;
+                          setCharacters(newCharacters);
+                        }}
+                        className="w-full p-2 border rounded-lg text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        rows={3}
+                        placeholder="Physical Description"
+                      />
+                      <textarea
+                        value={character.motivation}
+                        onChange={(e) => {
+                          const newCharacters = [...characters];
+                          newCharacters[index].motivation = e.target.value;
+                          setCharacters(newCharacters);
+                        }}
+                        className="w-full p-2 border rounded-lg text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        rows={3}
+                        placeholder="Motivation"
+                      />
+                    </div>
+                  ))}
                 </div>
               )}
 

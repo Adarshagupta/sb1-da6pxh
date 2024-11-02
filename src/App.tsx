@@ -17,6 +17,8 @@ import { InstallPWA } from './components/common/InstallPWA';
 import { requestNotificationPermission, scheduleBookReminders } from './utils/notifications';
 import { NotificationPrompt } from './components/common/NotificationPrompt';
 import { PrivacyPolicy } from './components/Legal/PrivacyPolicy';
+import Infin8t from 'infin8t';
+
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const [user, loading] = useAuthState(auth);
@@ -57,6 +59,7 @@ function App() {
   }, [user]);
 
   return (
+    
     <HelmetProvider>
       <AuthProvider>
         <ThemeProvider>
@@ -112,6 +115,8 @@ function App() {
       </AuthProvider>
     </HelmetProvider>
   );
+
+
 }
 
 export default App;

@@ -11,6 +11,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import { SEO } from './common/SEO';
 
+
 interface GenerationSettings {
   genre: string;
   style: string;
