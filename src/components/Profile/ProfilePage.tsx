@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { db, getUserTokens, updateUserTokens } from '../../lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+import { makePayment } from '../../lib/razorpay';
 
 const tokenPackages = [
   { tokens: 1000, price: 4.99, popular: false },
@@ -55,21 +56,38 @@ export const ProfilePage = () => {
   };
 
   const handlePurchase = async (pkg: typeof tokenPackages[0]) => {
-    // In a real app, integrate with a payment processor here
-    const confirmed = window.confirm(
-      `Purchase ${pkg.tokens} tokens for $${pkg.price}?\n\nThis is a demo - no real payment will be processed.`
-    );
+    if (!user) return;
 
-    if (confirmed && user) {
-      try {
-        // Add tokens to user's account
-        const currentTokens = await getUserTokens(user.uid);
-        await updateUserTokens(user.uid, currentTokens + pkg.tokens);
-        alert('Tokens purchased successfully!');
-      } catch (error) {
-        console.error('Error purchasing tokens:', error);
-        alert('Failed to purchase tokens');
-      }
+    try {
+      await makePayment({
+        amount: pkg.price,
+        tokens: pkg.tokens,
+        userId: user.uid,
+        userEmail: user.email || '',
+        onSuccess: async () => {
+          // Get current tokens and update
+          const currentTokens = await getUserTokens(user.uid);
+          await updateUserTokens(user.uid, currentTokens + pkg.tokens);
+          
+          setNotification({
+            type: 'success',
+            message: `Successfully purchased ${pkg.tokens} tokens!`
+          });
+        },
+        onError: (error) => {
+          console.error('Payment failed:', error);
+          setNotification({
+            type: 'error',
+            message: 'Failed to process payment. Please try again.'
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Payment error:', error);
+      setNotification({
+        type: 'error',
+        message: 'Failed to initiate payment. Please try again.'
+      });
     }
   };
 
@@ -77,7 +95,7 @@ export const ProfilePage = () => {
     <div className="min-h-screen bg-white md:bg-gradient-to-br md:from-indigo-50 md:via-purple-50 md:to-pink-50 p-2 md:p-6">
       <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
         {/* Profile Header */}
-        <div className="bg-white md:bg-white/80 md:backdrop-blur-sm rounded-2xl md:shadow-xl p-4 md:p-8 md:border md:border-white/20">
+        <div className="bg-white md:bg-white/80 pb-20 md:backdrop-blur-sm rounded-2xl md:shadow-xl p-4 md:p-8 md:border md:border-white/20">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="p-3 md:p-4 bg-indigo-100 rounded-full">
