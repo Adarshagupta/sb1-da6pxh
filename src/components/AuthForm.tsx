@@ -4,11 +4,13 @@ import { auth } from '../lib/firebase';
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
-  sendEmailVerification
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  setPersistence, 
+  browserLocalPersistence, 
+  browserSessionPersistence 
 } from 'firebase/auth';
-import { BookOpen } from 'lucide-react';
-import { Notification } from './ui/Notification';
-import { Loader } from './ui/Loader';
+import { BookOpen, Loader } from 'lucide-react';
 import { signInWithGoogle } from '../lib/firebase';
 import { SEO } from './common/SEO';
 
@@ -18,12 +20,47 @@ export function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetting, setResetting] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  const handleForgotPassword = async () => {
+    if (!resetEmail) {
+      setNotification({
+        type: 'error',
+        message: 'Please enter your email address'
+      });
+      return;
+    }
+
+    try {
+      setResetting(true);
+      await sendPasswordResetEmail(auth, resetEmail);
+      setNotification({
+        type: 'success',
+        message: 'Password reset email sent! Please check your inbox.'
+      });
+      setShowResetModal(false);
+      setResetEmail('');
+    } catch (error) {
+      console.error('Password reset error:', error);
+      setNotification({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Failed to send reset email'
+      });
+    } finally {
+      setResetting(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
+      await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
         if (!auth.currentUser?.emailVerified) {
@@ -133,6 +170,29 @@ export function AuthForm() {
 
             {/* Email Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <label className="flex items-center gap-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  Remember me
+                </label>
+                {isLogin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      console.log('Forgot password clicked');
+                      setShowResetModal(true);
+                    }}
+                    className="text-sm text-indigo-600 hover:text-indigo-800"
+                  >
+                    Forgot password?
+                  </button>
+                )}
+              </div>
               <div>
                 <input
                   type="email"
@@ -232,6 +292,29 @@ export function AuthForm() {
             
             {/* Email Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <label className="flex items-center gap-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  Remember me
+                </label>
+                {isLogin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      console.log('Forgot password clicked');
+                      setShowResetModal(true);
+                    }}
+                    className="text-sm text-indigo-600 hover:text-indigo-800"
+                  >
+                    Forgot password?
+                  </button>
+                )}
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email
@@ -281,12 +364,59 @@ export function AuthForm() {
           </div>
         </div>
 
+        {/* Reset Password Modal */}
+        {showResetModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-6 max-w-md w-full space-y-4" onClick={e => e.stopPropagation()}>
+              <h3 className="text-xl font-semibold text-gray-800">Reset Password</h3>
+              <p className="text-sm text-gray-600">
+                Enter your email address and we'll send you instructions to reset your password.
+              </p>
+              
+              <input
+                type="email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowResetModal(false);
+                    setResetEmail('');
+                  }}
+                  className="flex-1 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleForgotPassword}
+                  disabled={resetting || !resetEmail}
+                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {resetting ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    'Send Reset Link'
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Notification */}
         {notification && (
-          <Notification
-            type={notification.type}
-            message={notification.message}
-            onClose={() => setNotification(null)}
-          />
+          <div className={`fixed bottom-4 right-4 p-4 rounded-lg shadow-lg ${
+            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white`}>
+            {notification.message}
+          </div>
         )}
       </div>
     </>
